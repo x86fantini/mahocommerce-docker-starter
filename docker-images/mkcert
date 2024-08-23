@@ -17,4 +17,3 @@ RUN mkcert -install
 
 # Entry point for mkcert
 ENTRYPOINT ["mkcert"]
-
