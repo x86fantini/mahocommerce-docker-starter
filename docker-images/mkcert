@@ -22,3 +22,4 @@ WORKDIR /certs
 
 # Set the entrypoint for mkcert
 ENTRYPOINT ["mkcert"]
+
