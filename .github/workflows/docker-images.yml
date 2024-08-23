@@ -25,10 +25,10 @@ jobs:
 
       - name: Build and push mkcert image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/mkcert:latest -f docker-images/mkcert/Dockerfile docker-images/mkcert
+          docker build -t ghcr.io/${{ github.repository }}/mkcert:latest -f docker-images/mkcert
           docker push ghcr.io/${{ github.repository }}/mkcert:latest
 
       - name: Build and push php82_cli image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/php82_cli:latest -f docker-images/php82_cli/Dockerfile docker-images/php82_cli
+          docker build -t ghcr.io/${{ github.repository }}/php82_cli:latest -f docker-images/php82_cli
           docker push ghcr.io/${{ github.repository }}/php82_cli:latest
