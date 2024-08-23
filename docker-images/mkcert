@@ -21,4 +21,4 @@ RUN mkdir -p /certs
 WORKDIR /certs
 
 # Set the entrypoint for mkcert
-ENTRYPOINT ["mkcert"]
+CMD ["sh", "-c", "mkcert -key-file /certs/nginx.key -cert-file /certs/nginx.crt ${DOMAIN} 127.0.0.1 ::1"]
