@@ -1,0 +1,16 @@
+FROM alpine:3.18
+
+# Install necessary packages
+RUN apk add --no-cache libnss3-tools mkcert
+
+# Create a directory for SSL certificates
+RUN mkdir -p /certs
+
+# Set the working directory
+WORKDIR /certs
+
+# Install the local CA
+RUN mkcert -install
+
+# Entry point for mkcert
+ENTRYPOINT ["mkcert"]
