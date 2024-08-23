@@ -1,10 +1,18 @@
-FROM alpine:3.18
+FROM debian:stable-slim
 
 LABEL author="Simone Fantini"
 LABEL email="simone@ecommerce.mi.it"
 
-# Install necessary packages
-RUN apk add --no-cache libnss3-tools mkcert
+# Install dependencies and mkcert
+RUN apt-get update && \
+    apt-get install -y \
+      ca-certificates \
+      curl \
+      gnupg \
+      && curl -JLO "https://github.com/FiloSottile/mkcert/releases/download/v1.4.3/mkcert-v1.4.3-linux-amd64" \
+      && chmod +x mkcert-v1.4.3-linux-amd64 \
+      && mv mkcert-v1.4.3-linux-amd64 /usr/local/bin/mkcert \
+      && mkcert -install
 
 # Create a directory for SSL certificates
 RUN mkdir -p /certs
@@ -12,8 +20,5 @@ RUN mkdir -p /certs
 # Set the working directory
 WORKDIR /certs
 
-# Install the local CA
-RUN mkcert -install
-
-# Entry point for mkcert
+# Set the entrypoint for mkcert
 ENTRYPOINT ["mkcert"]
