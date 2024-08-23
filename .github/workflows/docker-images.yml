@@ -1,0 +1,34 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    paths:
+      - 'docker-images/**'  # Trigger only when there are changes in this folder
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_TOKEN }}
+
+      - name: Build and push mkcert image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/mkcert:latest -f docker-images/mkcert/Dockerfile docker-images/mkcert
+          docker push ghcr.io/${{ github.repository }}/mkcert:latest
+
+      - name: Build and push php82_cli image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/php82_cli:latest -f docker-images/php82_cli/Dockerfile docker-images/php82_cli
+          docker push ghcr.io/${{ github.repository }}/php82_cli:latest
