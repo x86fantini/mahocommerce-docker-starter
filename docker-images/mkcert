@@ -1,5 +1,8 @@
 FROM alpine:3.18
 
+LABEL author="Simone Fantini"
+LABEL email="simone@ecommerce.mi.it"
+
 # Install necessary packages
 RUN apk add --no-cache libnss3-tools mkcert
 

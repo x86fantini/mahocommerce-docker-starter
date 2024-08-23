@@ -1,5 +1,8 @@
 FROM php:8.2-cli
 
+LABEL author="Simone Fantini"
+LABEL email="simone@ecommerce.mi.it"
+
 # Install dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
     libfreetype6-dev \
