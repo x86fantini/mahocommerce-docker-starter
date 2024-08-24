@@ -1,6 +1,8 @@
 
 services:
   phpfpm:
+    labels:
+      - "maho-phpfpm"
     image: nginx:latest
     volumes:
       - codebase:/var/www/html
@@ -11,6 +13,8 @@ services:
       - maho_network
 
   webserver:
+    labels:
+      - "maho-webserver"
     image: nginx:latest
     ports:
       - "8080:80"
@@ -24,11 +28,25 @@ services:
       - maho_network
 
   mkcert:
+    labels:
+      - "maho-mkcert"
     image: mkcert-maho
     volumes:
       - sslcerts:/certs  # Use SSL volume for storing certificates
     environment:
       - DOMAIN=${DOMAIN}
+    networks:
+      - maho_network
+
+  logviewer:
+    labels:
+      - "maho-logviewer"
+    image: amir20/dozzle:latest
+    volumes:
+      #- /Users/$USERNAME/.colima/default/docker.sock ## Colima on Mac
+      - ${PWD}/logviewer:/data
+    environment:
+      DOZZLE_FILTER: name=maho
     networks:
       - maho_network
 
