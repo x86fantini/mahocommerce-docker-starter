@@ -1,0 +1,69 @@
+FROM php:8.2.22-fpm-bookworm
+
+# PHP ENV
+ENV PHPVER 8.2
+ENV PHP_MAX_CHILDREN 8
+ENV PHP_MAX_REQUESTS 400
+ENV PHP_REQUEST_TIMEOUT 300
+ENV PHP_MEMORY_LIMIT 756M
+ENV PHP_CLI_MEMORY_LIMIT 756M
+
+# SYS ENV
+ENV TZ Europe/Rome
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN \
+  ls -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
+  apt-get update -y &&\
+  apt-get -y install apt-transport-https ca-certificates curl python3 python3-pip restic &&\
+  apt-get install -y \
+      imagemagick \
+      acl \
+      git \
+      vim \
+      procps \
+      iputils-ping \
+      bash \
+      wget \
+      unzip \
+      zip \
+      gettext-base \
+      &&\
+  update-ca-certificates &&\
+  restic self-update &&\
+  apt-get autoremove -y &&\
+  apt-get clean -y
+
+#PHP Extensions installation
+#https://github.com/mlocati/docker-php-extension-installer
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN chmod +x /usr/local/bin/install-php-extensions && \
+    install-php-extensions \
+    gd \
+    mcrypt \
+    mysqli \
+    pdo_mysql \
+    igbinary \
+    bcmath \
+    soap \
+    zip \
+    redis \
+    imagick \
+    opcache \
+    intl \
+    exif \
+    xmlrpc \
+    xsl
+
+# prepare fpm folder with only our custom config
+RUN rm -rf /usr/local/etc/php-fpm.d/*
+
+# PHP
+COPY ../conf/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf.default.conf
+COPY ../conf/php-cli.conf /usr/local/etc/php/conf.d/zzz-cli-override.ini
+
+WORKDIR /var/www/html/
+
+EXPOSE 	9000
+
+CMD ["php-fpm"]
