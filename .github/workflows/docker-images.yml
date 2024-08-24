@@ -32,3 +32,8 @@ jobs:
         run: |
           docker build -t ghcr.io/${{ github.repository }}/php82_cli:latest -f docker-images/php82_cli docker-images
           docker push ghcr.io/${{ github.repository }}/php82_cli:latest
+
+      - name: Build and push php82_fpm image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/php82_fpm:latest -f docker-images/php82_fpm docker-images
+          docker push ghcr.io/${{ github.repository }}/php82_fpm:latest
