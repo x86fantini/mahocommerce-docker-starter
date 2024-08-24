@@ -1,8 +1,13 @@
 
 services:
   phpfpm:
+    container_name: maho-phpfpm
     labels:
-      - "maho-phpfpm"
+      ofelia.enabled: "true"
+      ofelia.job-exec.cron-default.schedule: "@every 5m"
+      ofelia.job-exec.cron-default.command: "php ./maho cron:run default"
+      ofelia.job-exec.cron-always.schedule: "@every 5m"
+      ofelia.job-exec.cron-always.command: "php ./maho cron:run always"
     image: nginx:latest
     volumes:
       - codebase:/var/www/html
@@ -13,8 +18,7 @@ services:
       - maho_network
 
   webserver:
-    labels:
-      - "maho-webserver"
+    container_name: maho-webserver
     image: nginx:latest
     ports:
       - "8080:80"
@@ -28,8 +32,7 @@ services:
       - maho_network
 
   mkcert:
-    labels:
-      - "maho-mkcert"
+    container_name: maho-mkcert
     image: mkcert-maho
     volumes:
       - sslcerts:/certs  # Use SSL volume for storing certificates
@@ -39,8 +42,7 @@ services:
       - maho_network
 
   logviewer:
-    labels:
-      - "maho-logviewer"
+    container_name: maho-logviewer
     image: amir20/dozzle:latest
     volumes:
       #- /Users/$USERNAME/.colima/default/docker.sock ## Colima on Mac
@@ -49,6 +51,13 @@ services:
       DOZZLE_FILTER: name=maho
     networks:
       - maho_network
+
+  ofelia:
+    container_name: maho-cron
+    image: mcuadros/ofelia:latest
+    command: daemon --docker -f label=com.docker.compose.project=${COMPOSE_PROJECT_NAME}
+    volumes:
+      #- /Users/$USERNAME/.colima/default/docker.sock:ro ## Colima on Mac
 
 volumes:
   codebase:
