@@ -59,8 +59,8 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
 RUN rm -rf /usr/local/etc/php-fpm.d/*
 
 # PHP
-COPY conf/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf.default.conf
-COPY conf/php-cli.conf /usr/local/etc/php/conf.d/zzz-cli-override.ini
+COPY ../conf/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf.default.conf
+COPY ../conf/php-cli.conf /usr/local/etc/php/conf.d/zzz-cli-override.ini
 
 WORKDIR /var/www/html/
 
