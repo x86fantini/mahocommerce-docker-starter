@@ -1,5 +1,8 @@
 FROM php:8.2.22-fpm-bookworm
 
+LABEL author="Simone Fantini"
+LABEL email="simone@ecommerce.mi.it"
+
 # PHP ENV
 ENV PHPVER 8.2
 ENV PHP_MAX_CHILDREN 10
@@ -15,9 +18,19 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN \
   ls -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
   apt-get update -y &&\
-  apt-get -y install apt-transport-https ca-certificates curl python3 python3-pip restic &&\
+  apt-get -y install apt-transport-https ca-certificates curl python3 python3-pip --no-install-recommends &&\
   apt-get install -y \
       imagemagick \
+      libfreetype6-dev \
+      libjpeg62-turbo-dev \
+      libpng-dev \
+      libicu-dev \
+      libzip-dev \
+      libsodium-dev \
+      libxml2-dev \
+      libcurl4-openssl-dev \
+      patch \
+      libssl-dev \
       acl \
       git \
       vim \
@@ -30,7 +43,6 @@ RUN \
       gettext-base \
       &&\
   update-ca-certificates &&\
-  restic self-update &&\
   apt-get autoremove -y &&\
   apt-get clean -y
 
@@ -48,12 +60,20 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
     soap \
     zip \
     redis \
+    phar \
+    zip \
     imagick \
     opcache \
     intl \
     exif \
     xmlrpc \
     xsl
+
+# Enable sodium
+RUN docker-php-ext-enable sodium
+
+# Install Composer latest version
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # prepare fpm folder with only our custom config
 RUN rm -rf /usr/local/etc/php-fpm.d/*

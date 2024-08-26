@@ -1,13 +1,13 @@
 
 services:
-  phpfpm:
+  php:
     container_name: maho-phpfpm
     labels:
       ofelia.enabled: "true"
       ofelia.job-exec.cron-default.schedule: "@every 5m"
-      ofelia.job-exec.cron-default.command: "php ./maho cron:run default"
+      ofelia.job-exec.cron-default.command: "su - www-data -c 'php /var/www/html/maho cron:run default'"
       ofelia.job-exec.cron-always.schedule: "@every 5m"
-      ofelia.job-exec.cron-always.command: "php ./maho cron:run always"
+      ofelia.job-exec.cron-always.command: "su - www-data -c 'php /var/www/html/maho cron:run always'"
     image: ghcr.io/x86fantini/mahocommerce-docker-starter/php82_fpm:latest
     volumes:
       - codebase:/var/www/html
@@ -25,7 +25,7 @@ services:
       - sslcerts:/etc/nginx/ssl:ro  # Mount SSL volume as read-only
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - phpfpm
+      - php
     networks:
       - maho_network
 
