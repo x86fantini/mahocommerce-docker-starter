@@ -1,14 +1,14 @@
 
 services:
   php:
-    container_name: maho-phpfpm
+    container_name: maho-php
     platform: linux/amd64 # fix for mac M1
     labels:
       ofelia.enabled: "true"
       ofelia.job-exec.cron-default.schedule: "@every 5m"
-      ofelia.job-exec.cron-default.command: "su - www-data -c 'php /var/www/html/maho cron:run default'"
+      ofelia.job-exec.cron-default.command: "php maho cron:run default"
       ofelia.job-exec.cron-always.schedule: "@every 5m"
-      ofelia.job-exec.cron-always.command: "su - www-data -c 'php /var/www/html/maho cron:run always'"
+      ofelia.job-exec.cron-always.command: "php maho cron:run always'"
     image: ghcr.io/x86fantini/mahocommerce-docker-starter/php82:latest
     volumes:
       - codebase:/var/www/html
@@ -21,10 +21,12 @@ services:
     image: nginx:latest
     ports:
       - "8080:80"
+      - "8443:443"
     volumes:
       - codebase:/var/www/html:ro   # Mount maho codebase as read-only
-      - sslcerts:/etc/nginx/ssl:ro  # Mount SSL volume as read-only
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./conf/nginx.conf:/etc/nginx/conf.d/default.conf
+      - "/Users/SDF/maho.dev.local+4.pem:/etc/nginx/ssl/nginx.crt"
+      - "/Users/SDF/maho.dev.local+4-key.pem:/etc/nginx/ssl/nginx.key"
     depends_on:
       - php
     networks:
@@ -59,11 +61,24 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock ## Colima on Mac
 
+  db:
+    container_name: maho-db
+    image: mariadb:10.6-focal
+    env_file:
+      - .env
+    volumes:
+      - mahodb:/var/lib/mysql
+      - ./conf/mariadb.cnf:/etc/mysql/conf.d/z.conf
+    networks:
+      - maho_network
+
 volumes:
   codebase:
     driver: local  # MaHo codebase
   sslcerts:
     driver: local  # Define a volume for SSL certificates
+  mahodb:
+    driver: local  # Mariadb
 
 networks:
   maho_network:

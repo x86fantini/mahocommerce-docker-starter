@@ -1,0 +1,23 @@
+[mysqld]
+optimizer_switch='rowid_filter=off'
+optimizer_use_condition_selectivity = 1
+innodb_fast_shutdown=0
+innodb_flush_log_at_trx_commit = 2
+innodb_lru_scan_depth=128
+performance_schema = off
+skip-log-bin
+net_read_timeout               = 900
+net_write_timeout              = 900
+wait_timeout                   = 900
+interactive_timeout            = 600
+max_allowed_packet = 512M
+table_open_cache = 4000
+sort_buffer_size = 1M
+read_buffer_size = 1M
+read_rnd_buffer_size = 2M
+join_buffer_size               = 2M
+sort_buffer_size               = 1M
+thread_cache_size = 64
+##innodb_buffer_pool_size = 1G
+innodb_flush_method = O_DIRECT
+##innodb_log_file_size = 384M
