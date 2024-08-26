@@ -19,7 +19,7 @@ jobs:
       - name: Cache Docker layers
         uses: actions/cache@v4
         with:
-          path: /tmp/.buildx-cache
+          path: /tmp/.buildx-cache-mkcert
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
@@ -38,8 +38,8 @@ jobs:
           file: docker-images/mkcert
           push: true
           tags: ghcr.io/${{ github.repository }}/mkcert:latest
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          cache-from: type=local,src=/tmp/.buildx-cache-mkcert
+          cache-to: type=local,dest=/tmp/.buildx-cache-mkcert
 
   build-php:
     runs-on: ubuntu-latest
@@ -54,7 +54,7 @@ jobs:
       - name: Cache Docker layers
         uses: actions/cache@v4
         with:
-          path: /tmp/.buildx-cache
+          path: /tmp/.buildx-cache-php
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
@@ -73,5 +73,5 @@ jobs:
           file: docker-images/php82
           push: true
           tags: ghcr.io/${{ github.repository }}/php82:latest
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          cache-from: type=local,src=/tmp/.buildx-cache-php
+          cache-to: type=local,dest=/tmp/.buildx-cache-php
