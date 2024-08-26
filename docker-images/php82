@@ -73,8 +73,10 @@ RUN docker-php-ext-enable sodium
 # Install Composer latest version
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# prepare fpm folder with only our custom config
-RUN rm -rf /usr/local/etc/php-fpm.d/*
+# prepare fpm folder with only our custom config & fix permissions 
+RUN rm -rf /usr/local/etc/php-fpm.d/* && \
+    mkdir -p /var/www/.composer && \
+    chown -R www-data:www-data /var/www/.composer
 
 # PHP
 COPY ../conf/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf.default.conf
