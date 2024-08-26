@@ -77,7 +77,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # prepare fpm folder with only our custom config & fix permissions 
 RUN rm -rf /usr/local/etc/php-fpm.d/* && \
     mkdir -p /var/www/.composer && \
-    chown -R www-data:www-data /var/www/.composer
+    mkdir -p /var/www/.vscode-server && \
+    chown -R www-data:www-data /var/www/.composer /var/www/.vscode-server
 
 # PHP
 COPY ../conf/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf.default.conf
