@@ -23,7 +23,7 @@ services:
     volumes:
       - codebase:/var/www/html:ro   # Mount maho codebase as read-only
       - sslcerts:/etc/nginx/ssl:ro  # Mount SSL volume as read-only
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - phpfpm
     networks:
@@ -43,19 +43,19 @@ services:
     container_name: maho-logviewer
     image: amir20/dozzle:latest
     volumes:
-      - /Users/SDF/.colima/default/docker.sock ## Colima on Mac
+      - /var/run/docker.sock:/var/run/docker.sock ## Colima on Mac
       #- ${PWD}/logviewer:/data
     environment:
       DOZZLE_FILTER: name=maho
     networks:
       - maho_network
 
-  ofelia:
+  cron:
     container_name: maho-cron
     image: mcuadros/ofelia:latest
-    command: daemon --docker -f label=com.docker.compose.project=${COMPOSE_PROJECT_NAME}
+    command: daemon --docker
     volumes:
-      - /Users/SDF/.colima/default/docker.sock ## Colima on Mac
+      - /var/run/docker.sock:/var/run/docker.sock ## Colima on Mac
 
 volumes:
   codebase:
