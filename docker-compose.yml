@@ -2,13 +2,14 @@
 services:
   php:
     container_name: maho-phpfpm
+    platform: linux/amd64 # fix for mac M1
     labels:
       ofelia.enabled: "true"
       ofelia.job-exec.cron-default.schedule: "@every 5m"
       ofelia.job-exec.cron-default.command: "su - www-data -c 'php /var/www/html/maho cron:run default'"
       ofelia.job-exec.cron-always.schedule: "@every 5m"
       ofelia.job-exec.cron-always.command: "su - www-data -c 'php /var/www/html/maho cron:run always'"
-    image: ghcr.io/x86fantini/mahocommerce-docker-starter/php82_fpm:latest
+    image: ghcr.io/x86fantini/mahocommerce-docker-starter/php82:latest
     volumes:
       - codebase:/var/www/html
     working_dir: /var/www/html
@@ -31,6 +32,7 @@ services:
 
   mkcert:
     container_name: maho-mkcert
+    platform: linux/amd64 # fix for mac M1
     image: ghcr.io/x86fantini/mahocommerce-docker-starter/mkcert:latest
     volumes:
       - sslcerts:/certs  # Use SSL volume for storing certificates

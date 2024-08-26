@@ -19,7 +19,7 @@ RUN \
   ls -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
   apt-get update -y &&\
   apt-get -y install apt-transport-https ca-certificates curl python3 python3-pip --no-install-recommends &&\
-  apt-get install -y \
+  apt-get install --no-install-recommends -y \
       imagemagick \
       libfreetype6-dev \
       libjpeg62-turbo-dev \
@@ -58,9 +58,7 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
     igbinary \
     bcmath \
     soap \
-    zip \
     redis \
-    phar \
     zip \
     imagick \
     opcache \
@@ -83,6 +81,8 @@ COPY ../conf/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf.default.conf
 COPY ../conf/php-cli.conf /usr/local/etc/php/conf.d/zzz-cli-override.ini
 
 WORKDIR /var/www/html/
+
+USER www-data
 
 EXPOSE 	9000
 
