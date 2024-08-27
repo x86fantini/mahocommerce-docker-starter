@@ -19,7 +19,7 @@ read -p "What is the local domain name? " DOMAIN
 mkcert -key-file conf/ssl/nginx.key -cert-file conf/ssl/nginx.crt "$DOMAIN" localhost 127.0.0.1 ::1
 
 # Save the domain to .env file
-sed -i "s/^DOMAIN=.*/DOMAIN=$DOMAIN/" .env
+sed -i '' "s/^DOMAIN=.*/DOMAIN=$new_domain/" .env
 
 # 4. Ask for confirmation to create Maho Commerce project
 read -p "Do you want to create the Maho Commerce project into volume? (yes/no) " CONFIRM
