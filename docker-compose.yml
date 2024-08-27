@@ -1,8 +1,9 @@
 
 services:
   webserver:
-    container_name: maho-webserver
     image: nginx:1.27-bookworm
+    labels:
+      - "logz=${LOGZ_LABEL}"
     env_file:
       - .env
     ports:
@@ -19,7 +20,6 @@ services:
       - maho_network
 
   php:
-    container_name: maho-php
     platform: linux/amd64 # fix for mac M1
     env_file:
       - .env
@@ -29,6 +29,7 @@ services:
       ofelia.job-exec.cron-default.command: "php maho cron:run default"
       ofelia.job-exec.cron-always.schedule: "@every 5m"
       ofelia.job-exec.cron-always.command: "php maho cron:run always"
+      logz: ${LOGZ_LABEL}
     image: ghcr.io/x86fantini/mahocommerce-docker-starter/php82:latest
     volumes:
       - ./conf/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf.default.conf
@@ -38,8 +39,9 @@ services:
       - maho_network
 
   logviewer:
-    container_name: maho-logviewer
     image: amir20/dozzle:latest
+    labels:
+      - "logz=${LOGZ_LABEL}"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock ## Colima on Mac
     env_file:
@@ -48,8 +50,9 @@ services:
       - maho_network
 
   cron:
-    container_name: maho-cron
     image: mcuadros/ofelia:latest
+    labels:
+      - "logz=${LOGZ_LABEL}"
     command: daemon --docker
     env_file:
       - .env
@@ -57,8 +60,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock ## Colima on Mac
 
   db:
-    container_name: maho-db
     image: mariadb:10.6-focal
+    labels:
+      - "logz=${LOGZ_LABEL}"
     env_file:
       - .env
     volumes:
