@@ -20,18 +20,17 @@ As of now this project is still under development, but i am activitly working on
 
 **db:** MariaDB
 
-**cache/sessions:** tbd
+**cache/sessions:** redis
 
 **ssl:** mkcert
 
-**logging:** [Dozzle](https://github.com/amir20/dozzle)
+**logging:** tbd
 
 **mail:** tbd
 
-**cron:** [Ofelia](https://github.com/mcuadros/ofelia)
+**cron:** [ofelia](https://github.com/mcuadros/ofelia)
 
 **backup:** tbd
-
 ## Authors
 
 - [@x86fantini](https://github.com/x86fantini)
@@ -52,8 +51,11 @@ In this way you can use ```docker compose exec php``` in order to execute comman
 When the ```startup.sh``` script is executed, you will be asked:
 - to install the CAROOT of mkcert into OS (macOS on my current system) trusted store
 - the local domain name for ssl certificate creation , nginx ```server_name``` and MaHo ```base_url```
+- the port for HTTP and HTTPS ports for nginx to bind
+- the script will populate the ```MARIADB``` variables for creating db, user and password
 - the command ```docker compose run php composer create-project -s dev mahocommerce/maho-starter .``` is issued so you will have the project ready to run, you can then follow the installation via browser
 
+#### Remember to edit your ```/etc/hosts``` with the chosen domain in order to be able to browse the domain
 
 #### Run locally
 
@@ -77,3 +79,15 @@ On the ```php``` container i have already added the lables necessary to run the 
       ofelia.job-exec.cron-always.schedule: "@every 5m"
       ofelia.job-exec.cron-always.command: "php maho cron:run always"
 ```
+
+#### Logs management
+
+The ```logviewer``` container will be your entrypoint for logs management of all containers in the compose stack. The nginx config will catch the ```/logz``` path and route traffic to the gui, based on chosen domain name and port. \
+Eg if domain id ```maho.dev.local``` and https port ```8443```, the logviewer will be available at ```https://maho.dev.local:8443/logz``` .
+
+#### VScode plugin
+If you use the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) plugin you can easilly browse code from inside the running ```php``` container. \
+The ```php``` container is equipped on board with
+- git
+- composer
+so you can log into container ```docker compose exec php bash``` and then execute commands (git, composer, etc)
