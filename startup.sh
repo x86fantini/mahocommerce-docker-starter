@@ -38,12 +38,20 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS (BSD `sed`)
     sed -i "" "s/^DOMAIN=.*/DOMAIN=$DOMAIN/" .env
     sed -i "" "s/^DOZZLE_HOSTNAME=.*/DOZZLE_HOSTNAME=$DOMAIN/" .env
-    sed -i "" "s/^LOGZ_LABEL=.*/LOGZ_LABEL=$DOMAIN/" .env
 else
     # Linux and WSL (GNU `sed`)
     sed -i "s/^DOMAIN=.*/DOMAIN=$DOMAIN/" .env
     sed -i "s/^DOZZLE_HOSTNAME=.*/DOZZLE_HOSTNAME=$DOMAIN/" .env
-    sed -i "s/^LOGZ_LABEL=.*/LOGZ_LABEL=$DOMAIN/" .env
+fi
+
+LOGZ=$(openssl rand -base64 10 | tr -d '/+=' | cut -c1-20)
+# Update the .env file with the random name for the Dazzle filter using sed
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS (BSD `sed`)
+    sed -i "" "s/^LOGZ_LABEL=.*/LOGZ_LABEL=$LOGZ/" .env
+else
+    # Linux and WSL (GNU `sed`)
+    sed -i "s/^LOGZ_LABEL=.*/LOGZ_LABEL=$LOGZ/" .env
 fi
 
 # Echo the chosen domain name
