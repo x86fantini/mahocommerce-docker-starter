@@ -11,7 +11,7 @@ services:
       - "${NGINX_HTTPS_PORT}:443"
     volumes:
       - codebase:/var/www/html:ro   # Mount maho codebase as read-only
-      - ./conf/nginx.conf:/etc/nginx/templates/maho.template
+      - ./conf/nginx.conf:/etc/nginx/templates/default.conf.template
       - ./conf/ssl/nginx.crt:/etc/nginx/ssl/nginx.crt
       - ./conf/ssl/nginx.key:/etc/nginx/ssl/nginx.key
     depends_on:
