@@ -25,9 +25,16 @@ if [ ! -f .env ]; then
     cp .env.example .env
 fi
 
-# Update the DOMAIN and DOZZLE_HOSTNAME in the .env file
-sed -i "s/^DOMAIN=.*/DOMAIN=$DOMAIN/" .env
-sed -i "s/^DOZZLE_HOSTNAME=.*/DOZZLE_HOSTNAME=$DOMAIN/" .env
+# Determine the operating system and apply the appropriate `sed` command
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS (BSD `sed`)
+    sed -i "" "s/^DOMAIN=.*/DOMAIN=$DOMAIN/" .env
+    sed -i "" "s/^DOZZLE_HOSTNAME=.*/DOZZLE_HOSTNAME=$DOMAIN/" .env
+else
+    # Linux and WSL (GNU `sed`)
+    sed -i "s/^DOMAIN=.*/DOMAIN=$DOMAIN/" .env
+    sed -i "s/^DOZZLE_HOSTNAME=.*/DOZZLE_HOSTNAME=$DOMAIN/" .env
+fi
 
 # Echo the chosen domain name
 echo "The domain name chosen is: $DOMAIN"
@@ -40,9 +47,16 @@ read -p "Which port should be exposed for HTTPS (default 8443)? " NGINX_HTTPS_PO
 NGINX_HTTP_PORT=${NGINX_HTTP_PORT:-8080}
 NGINX_HTTPS_PORT=${NGINX_HTTPS_PORT:-8443}
 
-# Update the .env file with the chosen ports
-echo "NGINX_HTTP_PORT=$NGINX_HTTP_PORT" >> .env
-echo "NGINX_HTTPS_PORT=$NGINX_HTTPS_PORT" >> .env
+# Update the .env file with the chosen ports using sed
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS (BSD `sed`)
+    sed -i "" "s/^NGINX_HTTP_PORT=.*/NGINX_HTTP_PORT=$NGINX_HTTP_PORT/" .env
+    sed -i "" "s/^NGINX_HTTPS_PORT=.*/NGINX_HTTPS_PORT=$NGINX_HTTPS_PORT/" .env
+else
+    # Linux and WSL (GNU `sed`)
+    sed -i "s/^NGINX_HTTP_PORT=.*/NGINX_HTTP_PORT=$NGINX_HTTP_PORT/" .env
+    sed -i "s/^NGINX_HTTPS_PORT=.*/NGINX_HTTPS_PORT=$NGINX_HTTPS_PORT/" .env
+fi
 
 # Echo the chosen nginx ports
 echo "The exposed ports for nginx are: HTTP=$NGINX_HTTP_PORT, HTTPS=$NGINX_HTTPS_PORT"
@@ -57,10 +71,18 @@ if [[ $CREATE_DB_VARS == "yes" || $CREATE_DB_VARS == "y" ]]; then
     # Generate a 10-character name for MARIADB_DATABASE and MARIADB_USER (same value)
     MARIADB_DB_USER=$(< /dev/urandom tr -dc 'a-z0-9' | head -c10)
 
-    # Update the .env file with the generated values
-    sed -i "s/^MARIADB_PASSWORD=.*/MARIADB_PASSWORD=$MARIADB_PASSWORD/" .env
-    sed -i "s/^MARIADB_DATABASE=.*/MARIADB_DATABASE=$MARIADB_DB_USER/" .env
-    sed -i "s/^MARIADB_USER=.*/MARIADB_USER=$MARIADB_DB_USER/" .env
+    # Update the .env file with the generated values using sed
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS (BSD `sed`)
+        sed -i "" "s/^MARIADB_PASSWORD=.*/MARIADB_PASSWORD=$MARIADB_PASSWORD/" .env
+        sed -i "" "s/^MARIADB_DATABASE=.*/MARIADB_DATABASE=$MARIADB_DB_USER/" .env
+        sed -i "" "s/^MARIADB_USER=.*/MARIADB_USER=$MARIADB_DB_USER/" .env
+    else
+        # Linux and WSL (GNU `sed`)
+        sed -i "s/^MARIADB_PASSWORD=.*/MARIADB_PASSWORD=$MARIADB_PASSWORD/" .env
+        sed -i "s/^MARIADB_DATABASE=.*/MARIADB_DATABASE=$MARIADB_DB_USER/" .env
+        sed -i "s/^MARIADB_USER=.*/MARIADB_USER=$MARIADB_DB_USER/" .env
+    fi
 
     # Echo the MariaDB variables recap
     echo "MariaDB variables have been created:"
