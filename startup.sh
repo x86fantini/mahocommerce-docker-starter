@@ -38,10 +38,12 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS (BSD `sed`)
     sed -i "" "s/^DOMAIN=.*/DOMAIN=$DOMAIN/" .env
     sed -i "" "s/^DOZZLE_HOSTNAME=.*/DOZZLE_HOSTNAME=$DOMAIN/" .env
+    sed -i "" "s/^LOGZ_LABEL=.*/LOGZ_LABEL=$DOMAIN/" .env
 else
     # Linux and WSL (GNU `sed`)
     sed -i "s/^DOMAIN=.*/DOMAIN=$DOMAIN/" .env
     sed -i "s/^DOZZLE_HOSTNAME=.*/DOZZLE_HOSTNAME=$DOMAIN/" .env
+    sed -i "s/^LOGZ_LABEL=.*/LOGZ_LABEL=$DOMAIN/" .env
 fi
 
 # Echo the chosen domain name
