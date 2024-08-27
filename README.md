@@ -20,17 +20,18 @@ As of now this project is still under development, but i am activitly working on
 
 **db:** MariaDB
 
-**cache/sessions:** redis
+**cache/sessions:** tbd
 
 **ssl:** mkcert
 
-**logging:** tbd
+**logging:** [Dozzle](https://github.com/amir20/dozzle)
 
 **mail:** tbd
 
-**cron:** [ofelia](https://github.com/mcuadros/ofelia)
+**cron:** [Ofelia](https://github.com/mcuadros/ofelia)
 
 **backup:** tbd
+
 ## Authors
 
 - [@x86fantini](https://github.com/x86fantini)
