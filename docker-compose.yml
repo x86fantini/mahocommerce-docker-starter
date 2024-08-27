@@ -44,8 +44,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock ## Colima on Mac
     env_file:
       - .env
-    #environment:
-    #  DOZZLE_FILTER: name=maho
     networks:
       - maho_network
 
