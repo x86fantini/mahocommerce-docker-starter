@@ -14,14 +14,64 @@ mkdir -p ./conf/ssl
 # 3. Execute mkcert -install and generate certificates
 mkcert -install
 
-read -p "What is the local domain name? " DOMAIN
+# 4. Get the local domain name from the user
+read -p "What is the local domain name? (e.g., maho.dev.local) " DOMAIN
 
 mkcert -key-file conf/ssl/nginx.key -cert-file conf/ssl/nginx.crt "$DOMAIN" localhost 127.0.0.1 ::1
 
-# Save the domain to .env file
-sed -i '' "s/^DOMAIN=.*/DOMAIN=$DOMAIN/" .env
+# 5. Create or update the .env file with the DOMAIN value
+if [ ! -f .env ]; then
+    # If .env doesn't exist, copy from .env.example
+    cp .env.example .env
+fi
 
-# 4. Ask for confirmation to create Maho Commerce project
+# Update the DOMAIN and DOZZLE_HOSTNAME in the .env file
+sed -i "s/^DOMAIN=.*/DOMAIN=$DOMAIN/" .env
+sed -i "s/^DOZZLE_HOSTNAME=.*/DOZZLE_HOSTNAME=$DOMAIN/" .env
+
+# Echo the chosen domain name
+echo "The domain name chosen is: $DOMAIN"
+
+# 6. Ask the user for nginx exposed ports
+read -p "Which port should be exposed for HTTP (default 8080)? " NGINX_HTTP_PORT
+read -p "Which port should be exposed for HTTPS (default 8443)? " NGINX_HTTPS_PORT
+
+# Set default ports if the user leaves them blank
+NGINX_HTTP_PORT=${NGINX_HTTP_PORT:-8080}
+NGINX_HTTPS_PORT=${NGINX_HTTPS_PORT:-8443}
+
+# Update the .env file with the chosen ports
+echo "NGINX_HTTP_PORT=$NGINX_HTTP_PORT" >> .env
+echo "NGINX_HTTPS_PORT=$NGINX_HTTPS_PORT" >> .env
+
+# Echo the chosen nginx ports
+echo "The exposed ports for nginx are: HTTP=$NGINX_HTTP_PORT, HTTPS=$NGINX_HTTPS_PORT"
+
+# 7. Ask to create the MariaDB variables
+read -p "Can I create the MariaDB variables? Attention, current ones will be overwritten (yes/no) " CREATE_DB_VARS
+
+if [[ $CREATE_DB_VARS == "yes" || $CREATE_DB_VARS == "y" ]]; then
+    # Generate a 20-character password for MARIADB_PASSWORD
+    MARIADB_PASSWORD=$(< /dev/urandom tr -dc 'A-Za-z0-9' | head -c20)
+
+    # Generate a 10-character name for MARIADB_DATABASE and MARIADB_USER (same value)
+    MARIADB_DB_USER=$(< /dev/urandom tr -dc 'a-z0-9' | head -c10)
+
+    # Update the .env file with the generated values
+    sed -i "s/^MARIADB_PASSWORD=.*/MARIADB_PASSWORD=$MARIADB_PASSWORD/" .env
+    sed -i "s/^MARIADB_DATABASE=.*/MARIADB_DATABASE=$MARIADB_DB_USER/" .env
+    sed -i "s/^MARIADB_USER=.*/MARIADB_USER=$MARIADB_DB_USER/" .env
+
+    # Echo the MariaDB variables recap
+    echo "MariaDB variables have been created:"
+    echo "MARIADB_PASSWORD=$MARIADB_PASSWORD"
+    echo "MARIADB_DATABASE=$MARIADB_DB_USER"
+    echo "MARIADB_USER=$MARIADB_DB_USER"
+else
+    echo "Skipping MariaDB variable creation."
+fi
+
+# 8. Ask for confirmation to create Maho Commerce project
 read -p "Do you want to create the Maho Commerce project into volume? (yes/no) " CONFIRM
 
 if [[ $CONFIRM == "yes" || $CONFIRM == "y" ]]; then
