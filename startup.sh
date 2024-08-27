@@ -8,18 +8,26 @@ then
     exit 1
 fi
 
-# 2. Check for or create the folder ./conf/ssl
+# 2. Check if openssl is installed
+if ! command -v openssl &> /dev/null
+then
+    echo "openssl is not installed. It's a prerequisite for this script."
+    echo "Please install it from: https://www.openssl.org/"
+    exit 1
+fi
+
+# 3. Check for or create the folder ./conf/ssl
 mkdir -p ./conf/ssl
 
-# 3. Execute mkcert -install and generate certificates
+# 4. Execute mkcert -install and generate certificates
 mkcert -install
 
-# 4. Get the local domain name from the user
+# 5. Get the local domain name from the user
 read -p "What is the local domain name? (e.g., maho.dev.local) " DOMAIN
 
 mkcert -key-file conf/ssl/nginx.key -cert-file conf/ssl/nginx.crt "$DOMAIN" localhost 127.0.0.1 ::1
 
-# 5. Create or update the .env file with the DOMAIN value
+# 6. Create or update the .env file with the DOMAIN value
 if [ ! -f .env ]; then
     # If .env doesn't exist, copy from .env.example
     cp .env.example .env
@@ -39,7 +47,7 @@ fi
 # Echo the chosen domain name
 echo "The domain name chosen is: $DOMAIN"
 
-# 6. Ask the user for nginx exposed ports
+# 7. Ask the user for nginx exposed ports
 read -p "Which port should be exposed for HTTP (default 8080)? " NGINX_HTTP_PORT
 read -p "Which port should be exposed for HTTPS (default 8443)? " NGINX_HTTPS_PORT
 
@@ -61,15 +69,15 @@ fi
 # Echo the chosen nginx ports
 echo "The exposed ports for nginx are: HTTP=$NGINX_HTTP_PORT, HTTPS=$NGINX_HTTPS_PORT"
 
-# 7. Ask to create the MariaDB variables
+# 8. Ask to create the MariaDB variables
 read -p "Can I create the MariaDB variables? Attention, current ones will be overwritten (yes/no) " CREATE_DB_VARS
 
 if [[ $CREATE_DB_VARS == "yes" || $CREATE_DB_VARS == "y" ]]; then
-    # Generate a 20-character password for MARIADB_PASSWORD
-    MARIADB_PASSWORD=$(< /dev/urandom tr -dc 'A-Za-z0-9' | head -c20)
+    # Generate a 20-character password for MARIADB_PASSWORD using openssl
+    MARIADB_PASSWORD=$(openssl rand -base64 20 | tr -d '/+=' | cut -c1-20)
 
-    # Generate a 10-character name for MARIADB_DATABASE and MARIADB_USER (same value)
-    MARIADB_DB_USER=$(< /dev/urandom tr -dc 'a-z0-9' | head -c10)
+    # Generate a 10-character name for MARIADB_DATABASE and MARIADB_USER (same value) using openssl
+    MARIADB_DB_USER=$(openssl rand -base64 10 | tr -d '/+=' | cut -c1-10)
 
     # Update the .env file with the generated values using sed
     if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -93,7 +101,7 @@ else
     echo "Skipping MariaDB variable creation."
 fi
 
-# 8. Ask for confirmation to create Maho Commerce project
+# 9. Ask for confirmation to create Maho Commerce project
 read -p "Do you want to create the Maho Commerce project into volume? (yes/no) " CONFIRM
 
 if [[ $CONFIRM == "yes" || $CONFIRM == "y" ]]; then
