@@ -1,3 +1,4 @@
 **/.DS_Store
 codebase/
 conf/ssl/
+.env
