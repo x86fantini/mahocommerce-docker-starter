@@ -25,8 +25,8 @@ services:
     volumes:
       - codebase:/var/www/html:ro   # Mount maho codebase as read-only
       - ./conf/nginx.conf:/etc/nginx/conf.d/default.conf
-      - "/Users/SDF/maho.dev.local+4.pem:/etc/nginx/ssl/nginx.crt"
-      - "/Users/SDF/maho.dev.local+4-key.pem:/etc/nginx/ssl/nginx.key"
+      - "./conf/ssl/nginx.crt:/etc/nginx/ssl/nginx.crt"
+      - "./conf/ssl/nginx.key:/etc/nginx/ssl/nginx.key"
     depends_on:
       - php
     networks:
@@ -37,11 +37,9 @@ services:
     platform: linux/amd64 # fix for mac M1
     image: ghcr.io/x86fantini/mahocommerce-docker-starter/mkcert:latest
     volumes:
-      - sslcerts:/certs  # Use SSL volume for storing certificates
+      - "./conf/ssl:/certs"
     environment:
       - DOMAIN=${DOMAIN}
-    networks:
-      - maho_network
 
   logviewer:
     container_name: maho-logviewer
@@ -76,8 +74,6 @@ services:
 volumes:
   codebase:
     driver: local  # MaHo codebase
-  sslcerts:
-    driver: local  # Define a volume for SSL certificates
   mahodb:
     driver: local  # Mariadb
 
