@@ -6,40 +6,6 @@ on:
       - 'docker-images/**'  # Trigger only when there are changes in this folder
 
 jobs:
-  build-mkcert:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out the code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Cache Docker layers
-        uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-cache-mkcert
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GH_TOKEN }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: docker-images
-          file: docker-images/mkcert
-          push: true
-          tags: ghcr.io/${{ github.repository }}/mkcert:latest
-          cache-from: type=local,src=/tmp/.buildx-cache-mkcert
-          cache-to: type=local,dest=/tmp/.buildx-cache-mkcert
 
   build-php:
     runs-on: ubuntu-latest
