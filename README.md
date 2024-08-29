@@ -10,6 +10,8 @@ As of now this project is still under development, but i am activitly working on
 - Fully compatible stack
 - Green SSL certs for local development
 - Different parameters for great flexibility
+- View logs from browser
+- Gui to managed database
 - Native integration with [VSCode](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 - High performance out of the box
 ## Tech Stack
