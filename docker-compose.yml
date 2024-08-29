@@ -71,6 +71,19 @@ services:
     networks:
       - maho_network
 
+  adminer:
+    image: wodby/adminer
+    env_file:
+      - .env
+    environment:
+      ADMINER_DEFAULT_DB_DRIVER: mysql
+      ADMINER_DEFAULT_DB_HOST: db
+      ADMINER_DEFAULT_DB_NAME: ${MARIADB_DATABASE}
+      ADMINER_DESIGN: nette
+      ADMINER_PLUGINS: tables-filter tinymce version-noverify
+    networks:
+      - maho_network
+
 volumes:
   codebase:
     driver: local  # MaHo codebase

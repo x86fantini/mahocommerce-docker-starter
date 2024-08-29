@@ -82,8 +82,13 @@ On the ```php``` container i have already added the lables necessary to run the 
 
 #### Logs management
 
-The ```logviewer``` container will be your entrypoint for logs management of all containers in the compose stack. The nginx config will catch the ```/logz``` path and route traffic to the gui, based on chosen domain name and port. \
+The ```logviewer``` container will be your entrypoint for logs management of all containers in the compose stack. The nginx config will catch the ```/logz/``` path and route traffic to the gui, based on chosen domain name and port. \
 Eg if domain id ```maho.dev.local``` and https port ```8443```, the logviewer will be available at ```https://maho.dev.local:8443/logz``` .
+
+#### DB Management
+
+The ```adminer``` container will run in the background and will read the ```.env``` for the DB vars. The nginx config will catch the ```/adminer/``` path and route traffic to the gui, based on chosen domain name and port. \
+Eg if domain id ```maho.dev.local``` and https port ```8443```, the logviewer will be available at ```https://maho.dev.local:8443/adminer/``` .
 
 #### VScode plugin
 If you use the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) plugin you can easilly browse code from inside the running ```php``` container. \
