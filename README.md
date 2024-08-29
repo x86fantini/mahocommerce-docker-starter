@@ -20,9 +20,9 @@ As of now this project is still under development, but i am activitly working on
 
 **db:** MariaDB
 
-**cache/sessions:** redis
+**cache/sessions:** tbd
 
-**ssl:** mkcert
+**ssl:** [mkcert](https://github.com/FiloSottile/mkcert)
 
 **logging:** [dozzle](https://github.com/amir20/dozzle)
 
