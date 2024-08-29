@@ -24,7 +24,9 @@ As of now this project is still under development, but i am activitly working on
 
 **ssl:** mkcert
 
-**logging:** tbd
+**logging:** [dozzle](https://github.com/amir20/dozzle)
+
+**db admin:** [adminer](https://github.com/wodby/adminer)
 
 **mail:** tbd
 
