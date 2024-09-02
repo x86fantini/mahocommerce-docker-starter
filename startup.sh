@@ -236,6 +236,7 @@ CONFIRM=${CONFIRM:-yes}
 
 if [[ $CONFIRM == "yes" || $CONFIRM == "y" ]]; then
     # Run a check inside the PHP container to see if /var/www/html exists and is not empty
+    docker-compose down --remove-orphans
     docker compose run --rm php sh -c '
         if [ -d "/var/www/html" ] && [ "$(ls -A /var/www/html)" ]; then
             echo
