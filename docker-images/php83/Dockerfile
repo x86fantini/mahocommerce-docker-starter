@@ -1,4 +1,4 @@
-FROM php:8.3.23-fpm-bookworm
+FROM php:8.3-fpm-bookworm
 
 LABEL author="Simone Fantini"
 LABEL email="simone@ecommerce.mi.it"

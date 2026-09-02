@@ -7,7 +7,7 @@ on:
 
 jobs:
 
-  build-php:
+  build-php83:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,8 +36,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: docker-images/php82
+          file: docker-images/php83/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}/php82:latest
+          tags: ghcr.io/${{ github.repository }}/php83:latest
           cache-from: type=local,src=/tmp/.buildx-cache-php
           cache-to: type=local,dest=/tmp/.buildx-cache-php
