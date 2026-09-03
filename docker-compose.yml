@@ -30,10 +30,10 @@ services:
       ofelia.job-exec.cron-always.schedule: "@every 5m"
       ofelia.job-exec.cron-always.command: "php maho cron:run always"
       logz: ${LOGZ_LABEL}
-    #image: ghcr.io/x86fantini/mahocommerce-docker-starter/php82:latest
+    #image: ghcr.io/x86fantini/mahocommerce-docker-starter/php85:latest
     build: 
       context: .
-      dockerfile: ./docker-images/php83/Dockerfile
+      dockerfile: ./docker-images/php85/Dockerfile
     volumes:
       - ./conf/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf.default.conf
       - ./conf/php-cli.conf:/usr/local/etc/php/conf.d/zzz-cli-override.ini
@@ -63,7 +63,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock ## Colima on Mac
 
   db:
-    image: mariadb:10.6-focal
+    image: mariadb:11.8
     labels:
       - "logz=${LOGZ_LABEL}"
     env_file:

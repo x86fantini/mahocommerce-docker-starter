@@ -1,10 +1,10 @@
-FROM php:8.3.23-fpm-bookworm
+FROM php:8.5-fpm-bookworm
 
 LABEL author="Simone Fantini"
 LABEL email="simone@ecommerce.mi.it"
 
 # PHP ENV
-ENV PHPVER=8.3
+ENV PHPVER=8.5
 ENV PHP_MAX_CHILDREN=10
 ENV PHP_MAX_REQUESTS=400
 ENV PHP_REQUEST_TIMEOUT=300
@@ -18,7 +18,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN \
   ls -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
   apt-get update -y &&\
-  apt-get -y install apt-transport-https ca-certificates curl python3 python3-pip --no-install-recommends &&\
+  apt-get -y install ca-certificates curl python3 python3-pip --no-install-recommends &&\
   apt-get install --no-install-recommends -y \
       imagemagick \
       libfreetype6-dev \
@@ -53,7 +53,6 @@ ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/do
 RUN chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions \
     gd \
-    mcrypt \
     ftp \
     mysqli \
     pdo_mysql \
